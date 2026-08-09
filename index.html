@@ -65,7 +65,7 @@
 const loader = new THREE.GLTFLoader();
 loader.load('map.glb', function (gltf) {
     const map = gltf.scene;
-        map.position.set(0, -10, 0);
+        map.position.set(0, -0, 0);
 
     scene.add(map);
 }, undefined, function (error) {
@@ -125,7 +125,7 @@ loader.load('map.glb', function (gltf) {
 
    // Загрузка оружия в руки
 let weapon = null;
-loader.load('weapon.glb', function (gltf) {
+loader.load('guns.glb', function (gltf) {
     weapon = gltf.scene;
     weapon.scale.set(0.1, 0.1, 0.1);
     weapon.position.set(0.3, -0.3, -0.5);
