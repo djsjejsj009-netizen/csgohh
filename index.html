@@ -46,8 +46,9 @@
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x1a1a1a);
 
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 3, 5); // Подняли выше и отодвинули назад, чтобы не быть внутри стен
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 5, 15);
+camera.lookAt(0, 0, 0); // <--- Добавь эту строчку, чтобы камера смотрела в центр
 scene.add(camera);
 
 
