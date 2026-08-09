@@ -65,6 +65,8 @@
 const loader = new THREE.GLTFLoader();
 loader.load('map.glb', function (gltf) {
     const map = gltf.scene;
+        map.position.set(0, -5, 0);
+
     scene.add(map);
 }, undefined, function (error) {
     console.error('Ошибка загрузки карты:', error);
