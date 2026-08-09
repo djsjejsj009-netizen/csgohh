@@ -47,7 +47,8 @@
         scene.background = new THREE.Color(0x1a1a1a);
 
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 1.6, 5);
+        camera.position.set(0, 2, 0);
+
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -171,9 +172,16 @@ loader.load('fps_saiga_animations.glb', function (gltf) {
             right.y = 0;
             right.normalize();
 
-            camera.position.addScaledVector(forward, -direction.z * speed);
-            camera.position.addScaledVector(right, direction.x * speed);
-            camera.position.y = 1.6; // Фиксируем высоту глаз
+            // Проверка препятствий перед движением
+const moveRay = new THREE.Raycaster(camera.position, direction.normalize());
+const walls = scene.children; // Проверяем все объекты на сцене (твою карту)
+const collision = moveRay.intersectObjects(walls, true);
+
+// Двигаемся только если стены нет (или она дальше 1 метра)
+if (collision.length === 0 || collision[0].distance > 1) {
+    camera.position.addScaledVector(forward, -direction.z * speed);
+    camera.position.addScaledVector(right, direction.x * speed);
+}
 
             renderer.render(scene, camera);
         }
