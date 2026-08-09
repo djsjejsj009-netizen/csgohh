@@ -127,10 +127,12 @@ loader.load('map.glb', function (gltf) {
 let weapon = null;
 loader.load('fps_saiga_animations.glb', function (gltf) {
     weapon = gltf.scene;
-    weapon.scale.set(0.1, 0.1, 0.1);
-    weapon.position.set(0.3, -0.3, -0.5);
+        weapon.scale.set(1, 1, 1);
+    weapon.position.set(0, 0, -2);
     camera.add(weapon);
-    scene.add(camera);
+    console.log("Оружие успешно загружено!", weapon);
+
+    
 }, undefined, function (error) {
     console.error('Ошибка загрузки оружия:', error);
 });
