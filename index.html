@@ -123,19 +123,29 @@ loader.load('map.glb', function (gltf) {
             }
         });
 
-   // Загрузка оружия в руки
+// Загрузка оружия в руки
 let weapon = null;
 loader.load('fps_saiga_animations.glb', function (gltf) {
     weapon = gltf.scene;
-        weapon.scale.set(1, 1, 1);
-    weapon.position.set(0, 0, -2);
-    camera.add(weapon);
-    console.log("Оружие успешно загружено!", weapon);
+    weapon.scale.set(1, 1, 1);
+    weapon.position.set(0, -0.4, -1.2); // Прямо перед камерой снизу
 
-    
+    // Принудительно включаем видимость всех деталей модели
+    weapon.traverse((child) => {
+        if (child.isMesh) {
+            child.visible = true;
+            if (child.material) {
+                child.material.side = THREE.DoubleSide; // чтобы текстуры не были прозрачными с обратной стороны
+            }
+        }
+    });
+
+    camera.add(weapon);
+    console.log("Оружие успешно добавлено в камеру!");
 }, undefined, function (error) {
     console.error('Ошибка загрузки оружия:', error);
 });
+
 
          // 6. Игровой цикл
         const clock = new THREE.Clock();
