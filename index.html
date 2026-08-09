@@ -65,7 +65,7 @@
 const loader = new THREE.GLTFLoader();
 loader.load('map.glb', function (gltf) {
     const map = gltf.scene;
-        map.position.set(0, -5, 0);
+        map.position.set(0, -10, 0);
 
     scene.add(map);
 }, undefined, function (error) {
@@ -174,6 +174,87 @@ loader.load('weapon.glb', function (gltf) {
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
-</body>
+</body><!-- Сенсорные кнопки для телефона -->
+<style>
+    .mob-btn {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.3);
+        border: 2px solid white;
+        border-radius: 50%;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        z-index: 100;
+    }
+    #btnForward { bottom: 140px; left: 80px; }
+    #btnLeft { bottom: 70px; left: 10px; }
+    #btnBack { bottom: 70px; left: 80px; }
+    #btnRight { bottom: 70px; left: 150px; }
+    #btnShoot { bottom: 70px; right: 20px; width: 80px; height: 80px; background: rgba(255, 0, 0, 0.5); border-radius: 50%; }
+</style>
+
+<div id="btnForward" class="mob-btn">W</div>
+<div id="btnLeft" class="mob-btn">A</div>
+<div id="btnBack" class="mob-btn">S</div>
+<div id="btnRight" class="mob-btn">D</div>
+<div id="btnShoot" class="mob-btn">FIRE</div>
+
+<script>
+    // Обработка нажатий на сенсорные кнопки
+    function bindTouchButton(id, stateKey) {
+        const btn = document.getElementById(id);
+        btn.addEventListener('touchstart', (e) => { e.preventDefault(); moveState[stateKey] = true; });
+        btn.addEventListener('touchend', (e) => { e.preventDefault(); moveState[stateKey] = false; });
+    }
+    bindTouchButton('btnForward', 'forward');
+    bindTouchButton('btnBack', 'backward');
+    bindTouchButton('btnLeft', 'left');
+    bindTouchButton('btnRight', 'right');
+
+    // Кнопка стрельбы с телефона
+    document.getElementById('btnShoot').addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+        const intersects = raycaster.intersectObjects(scene.children, true);
+        if (intersects.length > 0) {
+            const hit = intersects[0].object;
+            if (hit !== floor) {
+                hit.material.color.set(Math.random() * 0xffffff);
+            }
+        }
+    });
+
+    // Обзор пальцем по экрану (замена движения мышки для телефона)
+    let isTouching = false;
+    let prevX = 0, prevY = 0;
+    window.addEventListener('touchstart', (e) => {
+        if (e.target.classList.contains('mob-btn')) return;
+        isTouching = true;
+        prevX = e.touches[0].clientX;
+        prevY = e.touches[0].clientY;
+    });
+    window.addEventListener('touchmove', (e) => {
+        if (!isTouching) return;
+        const currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        const movementX = currentX - prevX;
+        const movementY = currentY - prevY;
+        prevX = currentX;
+        prevY = currentY;
+
+        euler.y -= movementX * 0.005;
+        euler.x -= movementY * 0.005;
+        euler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.x));
+        camera.quaternion.setFromEuler(euler);
+    });
+    window.addEventListener('touchend', () => { isTouching = false; });
+</script>
+
 </html>
 
