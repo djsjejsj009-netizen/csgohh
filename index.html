@@ -131,27 +131,16 @@ loader.load('map.glb', function (gltf) {
         });
 
 // Загрузка оружия в руки
+// Загрузка оружия
 let weapon = null;
-loader.load('fps_saiga_animations.glb', function (gltf) {
+loader.load('fps_saiga_animations.glb', (gltf) => {
     weapon = gltf.scene;
-    weapon.scale.set(1, 1, 1); // Масштаб модели
-    weapon.position.set(0, -0.4, -1.2); // Позиция модели перед камерой
-
-    // Принудительно включаем видимость всех деталей модели
-    weapon.traverse((child) => {
-        if (child.isMesh) {
-            child.visible = true;
-            if (child.material) {
-                child.material.side = THREE.DoubleSide; // чтобы текстуры отображались с обеих сторон
-            }
-        }
-    });
-
+    weapon.position.set(0, -0.4, -1.2);
     camera.add(weapon);
-    console.log("Оружие успешно добавлено в камеру!");
-}, undefined, function (error) {
+}, undefined, (error) => {
     console.error('Ошибка загрузки оружия:', error);
 });
+
 
 
 
