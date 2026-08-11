@@ -128,28 +128,13 @@ loader.load('map.glb', function (gltf) {
             }
         });
 
-// Загрузка оружия в руки
-let weapon = null;
-loader.load('fps_saiga_animations.glb', function (gltf) {
-    weapon = gltf.scene;
-    weapon.scale.set(1, 1, 1);
-    weapon.position.set(0, -0.4, -1.2); // Прямо перед камерой снизу
+// Тестовый кубик в руках вместо модели
+const testGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.6);
+const testMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const testWeapon = new THREE.Mesh(testGeometry, testMaterial);
+testWeapon.position.set(0, -0.3, -0.8); // Прямо перед камерой
+camera.add(testWeapon);
 
-    // Принудительно включаем видимость всех деталей модели
-    weapon.traverse((child) => {
-        if (child.isMesh) {
-            child.visible = true;
-            if (child.material) {
-                child.material.side = THREE.DoubleSide; // чтобы текстуры не были прозрачными с обратной стороны
-            }
-        }
-    });
-
-    camera.add(weapon);
-    console.log("Оружие успешно добавлено в камеру!");
-}, undefined, function (error) {
-    console.error('Ошибка загрузки оружия:', error);
-});
 
 
          // 6. Игровой цикл
